@@ -28,17 +28,18 @@ class SinkhornDistance(nn.Module):
     def forward(self, x, y):
         # The Sinkhorn algorithm takes as input three variables :
         C = self._cost_matrix(x, y)  # Wasserstein cost function
-        n_points = x.shape[-2]
+        x_points = x.shape[-2]
+        y_points = y.shape[-2]
         if x.dim() == 2:
             batch_size = 1
         else:
             batch_size = x.shape[0]
 
         # both marginals are fixed with equal weights
-        mu = torch.empty(batch_size, n_points, dtype=torch.float,
-                         requires_grad=False).fill_(1.0 / n_points).squeeze()
-        nu = torch.empty(batch_size, n_points, dtype=torch.float,
-                         requires_grad=False).fill_(1.0 / n_points).squeeze()
+        mu = torch.empty(batch_size, x_points, dtype=torch.float,
+                         requires_grad=False).fill_(1.0 / x_points).squeeze()
+        nu = torch.empty(batch_size, y_points, dtype=torch.float,
+                         requires_grad=False).fill_(1.0 / y_points).squeeze()
 
         u = torch.zeros_like(mu)
         v = torch.zeros_like(nu)
