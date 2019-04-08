@@ -52,8 +52,8 @@ class SinkhornDistance(nn.Module):
         # Sinkhorn iterations
         for i in range(self.max_iter):
             u1 = u  # useful to check the update
-            u = self.eps * (torch.log(mu+1e-8) - self.lse(self.M(C, u, v))) + u
-            v = self.eps * (torch.log(nu+1e-8) - self.lse(self.M(C, u, v).transpose(-2, -1))) + v
+            u = self.eps * (torch.log(mu+1e-8) - torch.logsumexp(self.M(C, u, v), dim=-1)) + u
+            v = self.eps * (torch.log(nu+1e-8) - torch.logsumexp(self.M(C, u, v).transpose(-2, -1), dim=-1)) + v
             err = (u - u1).abs().sum(-1).mean()
 
             actual_nits += 1
@@ -85,13 +85,6 @@ class SinkhornDistance(nn.Module):
         y_lin = y.unsqueeze(-3)
         C = torch.sum((torch.abs(x_col - y_lin)) ** p, -1)
         return C
-
-    @staticmethod
-    def lse(A):
-        "log-sum-exp"
-        # add 10^-6 to prevent NaN
-        result = torch.log(torch.exp(A).sum(-1) + 1e-6)
-        return result
 
     @staticmethod
     def ave(u, u1, tau):
