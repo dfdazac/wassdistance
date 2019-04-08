@@ -4,7 +4,8 @@ import torch.nn as nn
 # Adapted from https://github.com/gpeyre/SinkhornAutoDiff
 class SinkhornDistance(nn.Module):
     r"""
-    Given two empirical measures with n points each with locations x and y,
+    Given two empirical measures each with :math:`P_1` locations
+    :math:`x\in\mathbb{R}^{D_1}` and :math:`P_2` locations :math:`y\in\mathbb{R}^{D_2}`,
     outputs an approximation of the regularized OT cost for point clouds.
 
     Args:
@@ -13,13 +14,13 @@ class SinkhornDistance(nn.Module):
         reduction (string, optional): Specifies the reduction to apply to the output:
             'none' | 'mean' | 'sum'. 'none': no reduction will be applied,
             'mean': the sum of the output will be divided by the number of
-            elements in the output, 'sum': the output will be summed. Default: 'mean'
+            elements in the output, 'sum': the output will be summed. Default: 'none'
 
     Shape:
-        - Input: :math:`(N, \text{in\_features})`, :math:`(N, \text{in\_features})`
+        - Input: :math:`(N, P_1, D_1)`, :math:`(N, P_2, D_2)`
         - Output: :math:`(N)` or :math:`()`, depending on `reduction`
     """
-    def __init__(self, eps, max_iter, reduction='mean'):
+    def __init__(self, eps, max_iter, reduction='none'):
         super(SinkhornDistance, self).__init__()
         self.eps = eps
         self.max_iter = max_iter
