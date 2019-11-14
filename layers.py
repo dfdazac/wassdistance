@@ -20,7 +20,7 @@ class SinkhornDistance(nn.Module):
         - Input: :math:`(N, P_1, D_1)`, :math:`(N, P_2, D_2)`
         - Output: :math:`(N)` or :math:`()`, depending on `reduction`
     """
-    def __init__(self, eps, max_iter, device, reduction='none'):
+    def __init__(self, eps, max_iter, device=None, reduction='none'):
         super(SinkhornDistance, self).__init__()
         self.eps = eps
         self.max_iter = max_iter
