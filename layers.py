@@ -37,9 +37,9 @@ class SinkhornDistance(nn.Module):
             batch_size = x.shape[0]
 
         # both marginals are fixed with equal weights
-        mu = torch.empty(batch_size, x_points, dtype=torch.float,
+        mu = torch.empty(batch_size, x_points, dtype=x.dtype, device=x.device,
                          requires_grad=False).fill_(1.0 / x_points).squeeze()
-        nu = torch.empty(batch_size, y_points, dtype=torch.float,
+        nu = torch.empty(batch_size, y_points, dtype=x.dtype, device=x.device,
                          requires_grad=False).fill_(1.0 / y_points).squeeze()
 
         u = torch.zeros_like(mu)
